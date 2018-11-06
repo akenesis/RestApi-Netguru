@@ -4,10 +4,9 @@ const RequestHandler = require("./RequestHandler");
 const bodyParser = require("body-parser");
 const { isAlphanumeric } = require("validator");
 const { MongoClient, ObjectId } = require("mongodb");
-const port = process.env.PORT || 3008;
+const port = process.env.PORT || 3000;
 const requestHandler = new RequestHandler();
 const textParser = bodyParser.text();
-const _ = require("lodash");
 
 let IDSTATE = [];
 
@@ -34,7 +33,7 @@ const sanitize = text => {
 };
 
 const populateIds = db => {
-  db.collection("EXPIII")
+  db.collection("RestAPI-D")
     .find({}, { projection: { _id: 1 } })
     .toArray((err, result) => {
       if (err) throw err;
@@ -46,7 +45,7 @@ const populateIds = db => {
 const getObjComments = (text, db, callback) => {
   const _id = isValidID(text, db);
   if (_id) {
-    db.collection("EXPIII")
+    db.collection("RestAPI-D")
       .find({ _id: new ObjectId(_id) })
       .toArray()
       .then(
@@ -112,7 +111,7 @@ const postComment = (text, db, res, callback) => {
     comments = flatten(comments.concat(sanitizedObject.comment));
     console.log(comments);
 
-    db.collection("EXPIII")
+    db.collection("RestAPI-D")
       .findOneAndUpdate(
         {
           _id: new ObjectId(sanitizedObject.id)
@@ -139,7 +138,7 @@ const postComment = (text, db, res, callback) => {
 
 const postMovie = (movieObj, db) => {
   const movieObjWComment = Object.assign({}, movieObj, { comment: [] });
-  db.collection("EXPIII").insertOne(movieObjWComment, (err, result) => {
+  db.collection("RestAPI-D").insertOne(movieObjWComment, (err, result) => {
     if (err) {
       return console.error(`Error:`, err);
     }
@@ -153,7 +152,7 @@ const readMovies = db => {
   return new Promise((resolve, reject) => {
     let outerDocs;
 
-    db.collection("EXPIII")
+    db.collection("RestAPI-D")
       .find()
       .toArray()
       .then(
@@ -173,14 +172,14 @@ app = express();
 app.use(helmet());
 
 MongoClient.connect(
-  "mongodb://localhost:27017/EXPIII",
+  "mongodb://localhost:27017/RestAPI-D",
   { useNewUrlParser: true },
   (err, client) => {
     if (err) {
       return console.error(`ERROR:`, err);
     }
     console.log(`Connected to MongoDB server`);
-    const db = client.db("EXPIII");
+    const db = client.db("RestAPI-D");
 
     populateIds(db);
 
@@ -215,7 +214,7 @@ MongoClient.connect(
     // Should allow filtering comments by associated movie, by passing its ID.
 
     app.get("/comments", (req, res) => {
-      db.collection("EXPIII")
+      db.collection("RestAPI-D")
         .find({}, { projection: { comment: 1, Title: 1 } })
         .toArray((err, result) => {
           if (err) throw err;
