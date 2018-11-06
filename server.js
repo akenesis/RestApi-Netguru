@@ -7,6 +7,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const port = process.env.PORT || 3000;
 const requestHandler = new RequestHandler();
 const textParser = bodyParser.text();
+let uri = process.env.MONGOLAB_URI || "mongodb://localhost/test";
 
 let IDSTATE = [];
 
@@ -172,7 +173,7 @@ app = express();
 app.use(helmet());
 
 MongoClient.connect(
-  "mongodb://localhost:27017/RestAPI-D",
+  uri,
   { useNewUrlParser: true },
   (err, client) => {
     if (err) {
