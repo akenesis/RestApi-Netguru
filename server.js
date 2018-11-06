@@ -7,7 +7,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const port = process.env.PORT || 3000;
 const requestHandler = new RequestHandler();
 const textParser = bodyParser.text();
-let uri = process.env.MONGOLAB_URI || "mongodb://localhost/test";
+var uri = process.env.MONGOLAB_URI;
 
 let IDSTATE = [];
 
