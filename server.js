@@ -7,7 +7,6 @@ const { MongoClient, ObjectId } = require("mongodb");
 const port = process.env.PORT || 3000;
 const requestHandler = new RequestHandler();
 const textParser = bodyParser.text();
-var uri = process.env.MONGOLAB_URI;
 
 let IDSTATE = [];
 
@@ -173,14 +172,14 @@ app = express();
 app.use(helmet());
 
 MongoClient.connect(
-  uri,
+  "mongodb://raege:number1undertheheavens@ds253353.mlab.com:53353/raege",
   { useNewUrlParser: true },
   (err, client) => {
     if (err) {
       return console.error(`ERROR:`, err);
     }
     console.log(`Connected to MongoDB server`);
-    const db = client.db("RestAPI-D");
+    const db = client.db("raege");
 
     populateIds(db);
 
