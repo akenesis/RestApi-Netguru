@@ -186,9 +186,7 @@ MongoClient.connect(
 
     populateIds(db);
 
-    app.listen(process.env.PORT, "0.0.0.0", () => {
-      console.log(`App started on port ${port}`);
-    });
+    app.listen(process.env.PORT, "0.0.0.0");
 
     app.get("/", (req, res) => {
       res.send("API up and running");
