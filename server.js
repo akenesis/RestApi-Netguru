@@ -1,4 +1,5 @@
 const helmet = require("helmet");
+const _ = require("lodash");
 const express = require("express");
 const RequestHandler = require("./RequestHandler");
 const bodyParser = require("body-parser");
@@ -108,8 +109,10 @@ const postComment = (text, db, res, callback) => {
   getObjComments(text, db, comments => {
     console.log(comments);
 
-    comments = flatten(comments.concat(sanitizedObject.comment));
-    console.log(comments);
+    const flattenedComments = flatten(comments.concat(sanitizedObject.comment));
+    const newComments = _.filter(flattenedComments, function(sub) {
+      return sub.length;
+    });
 
     db.collection("RestAPI-D")
       .findOneAndUpdate(
@@ -118,7 +121,7 @@ const postComment = (text, db, res, callback) => {
         },
         {
           $set: {
-            comment: comments
+            comment: newComments
           }
         },
         {
